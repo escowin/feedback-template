@@ -10,20 +10,20 @@
 const path = require("path");
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
+const { typeDefs, resolvers } = require("./schemas");
+const { authMiddleware } = require("./utils/auth");
 const db = require("./config/connection");
-// auth middleware
-// graphql schemas
 
 // Port connection for either production or local environment
 const PORT = process.env.port || 3001;
 
 // Apollo server configuration
 const server = new ApolloServer({
-    // typeDefs,
-    // resolvers,
-    // context: authMiddleware,
-    cache: "bounded"
-})
+  typeDefs,
+  resolvers,
+  context: authMiddleware,
+  cache: "bounded",
+});
 
 // Creates an instance of the Express application
 const app = express();
@@ -40,12 +40,16 @@ if (process.env.NODE_ENV === "production") {
 }
 
 async function startApolloServer(typeDefs, resolvers) {
+  await server.start();
+  // integrates apollo server with express app as middleware
+  server.applyMiddleware({ app });
+
   db.once("open", () => {
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}`);
-      console.log(`URL http://localhost:${PORT}`);
+      console.log(`IDE http://localhost:${PORT}${server.graphqlPath}`);
     });
   });
 }
 
-startApolloServer("typedefs", "resolvers");
+startApolloServer(typeDefs, resolvers);
