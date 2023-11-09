@@ -4,7 +4,6 @@ const typeDefs = gql`
   type User {
     _id: ID
     username: String
-    password: String
     collections: [Collection]
   }
 
@@ -17,6 +16,7 @@ const typeDefs = gql`
 
   type Template {
     _id: ID
+    collectionId: ID
     createdAt: String
     title: String
     strings: [String]
@@ -52,11 +52,11 @@ const typeDefs = gql`
     editCollection(_id: ID!, title: String!): Collection
     deleteCollection(_id: ID!): Collection
 
-    addTemplate(title: String!): Template
+    addTemplate(collectionId: ID!, title: String!): Template
     editTemplate(_id: ID!, title: String!): Template
     deleteTemplate(_id: ID!): Template
 
-    addString(type: String!, string: String!): Template
+    addString(templateId: ID!, type: String!, string: String!): Template
     editString(_id: ID!, type: String!, string: String!): Template
     deleteString(_id: ID!, type: String!, string: String!): Template
   }
