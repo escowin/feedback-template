@@ -16,6 +16,12 @@ const UserSchema = new Schema(
       minLength: 5,
       maxLength: 25,
     },
+    collections: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Collection"
+      }
+    ]
   },
   {
     toJSON: {
