@@ -8,9 +8,9 @@ const resolvers = {
       if (!context.user) {
         throw new AuthenticationError("login required");
       }
-      const user = await User.findOne({ _id: context.user._id }).select(
-        "-__v -password"
-      );
+      const user = await User.findOne({ _id: context.user._id })
+        .select("-__v -password")
+        .populate([{ path: "collections" }]);
       return user;
     },
     users: async () => User.find().select("-__v -password"),
@@ -40,6 +40,7 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+
     // Collection
     addCollection: async (parent, args, context) => {
       if (!context.user) {
@@ -90,6 +91,7 @@ const resolvers = {
       );
       return collection;
     },
+
     // Template
     addTemplate: async (parent, args, context) => {
       if (!context.user) {
@@ -134,8 +136,9 @@ const resolvers = {
       );
       return collection;
     },
+
     // Strings
-    addString: async (parent, { templateId, string, type }, context) => {
+    addText: async (parent, { templateId, string, type }, context) => {
       if (!context.user) {
         throw new AuthenticationError("login required");
       }
@@ -148,14 +151,14 @@ const resolvers = {
 
       return update;
     },
-    editString: async (parent, args, context) => {
+    editText: async (parent, args, context) => {
       if (!context.user) {
         throw new AuthenticationError("login required");
       }
 
       console.log(args);
     },
-    deleteString: async (parent, args, context) => {
+    deleteText: async (parent, args, context) => {
       if (!context.user) {
         throw new AuthenticationError("login required");
       }

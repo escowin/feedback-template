@@ -1,10 +1,12 @@
 const { Schema, model } = require("mongoose");
+const dateFormat = require("../utils/dateFormat");
 
-const StringSchema = new Schema(
+const TextSchema = new Schema(
   {
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (timestamp) => dateFormat(timestamp)
     },
     type: {
       type: String,
@@ -12,7 +14,7 @@ const StringSchema = new Schema(
       trim: true,
       maxLength: 25,
     },
-    string: {
+    text: {
       type: String,
       required: true,
       trim: true,
@@ -37,7 +39,7 @@ const TemplateSchema = new Schema(
       trim: true,
       maxLength: 25,
     },
-    strings: [StringSchema],
+    texts: [TextSchema],
   },
   {
     toJSON: {
