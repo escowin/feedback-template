@@ -171,21 +171,22 @@ const resolvers = {
 
       console.log(args);
     },
-    deleteText: async (parent, args, context) => {
+    deleteText: async (parent, { _id, templateId }, context) => {
       if (!context.user) {
         throw new AuthenticationError("login required");
       }
-      console.log(args);
-      // try {
-      //   const template = await Template.findOneAndUpdate(
-      //     { _id: },
-      //     { $pull: { strings: { _id: _id } } },
-      //     { new: true, runValidators: true }
-      //   );
-      //   return !template ? new Error("template not found") : updatedJob;
-      // } catch (err) {
-      //   throw new Error("failed to delete string");
-      // }
+
+      try {
+        const template = await Template.findOneAndUpdate(
+          { _id: templateId },
+          { $pull: { texts: { _id: _id } } },
+          { new: true, runValidators: true }
+        );
+        
+        return !template ? new Error("template not found") : template;
+      } catch (err) {
+        throw new Error("failed to deelte text");
+      }
     },
   },
 };
