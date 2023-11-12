@@ -57,7 +57,7 @@ const typeDefs = gql`
     deleteTemplate(_id: ID!): Template
 
     addText(templateId: ID!, type: String!, text: String!): Template
-    editText(_id: ID!, type: String!, text: String!): Template
+    editText(_id: ID!, templateId: ID!, type: String, text: String): Template
     deleteText(_id: ID!, templateId: ID!): Template
   }
 `;

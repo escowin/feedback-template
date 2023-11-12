@@ -165,11 +165,27 @@ const resolvers = {
       return update;
     },
     editText: async (parent, args, context) => {
+      // target a specific Template by its id
+      // replace the matching text object in the texts array with new data
+      // save the changes
       if (!context.user) {
         throw new AuthenticationError("login required");
       }
 
-      console.log(args);
+      try {
+        const { templateId, _id, type, text } = args;
+
+        // Find the template by ID and update the matching text object
+        const template = await Template.findOneAndUpdate(
+          { _id: templateId, "texts._id": _id },
+          { $set: { "texts.$.type": type, "texts.$.text": text } },
+          { new: true, runValidators: true }
+        );
+
+        return !template ? new Error("template not found") : template;
+      } catch (err) {
+        throw new Error("failed to edit text");
+      }
     },
     deleteText: async (parent, { _id, templateId }, context) => {
       if (!context.user) {
@@ -182,10 +198,10 @@ const resolvers = {
           { $pull: { texts: { _id: _id } } },
           { new: true, runValidators: true }
         );
-        
+
         return !template ? new Error("template not found") : template;
       } catch (err) {
-        throw new Error("failed to deelte text");
+        throw new Error("failed to delete text");
       }
     },
   },
