@@ -1,12 +1,12 @@
 const { Schema, model } = require("mongoose");
-const dateFormat = require("../utils/dateFormat");
+const { dateFormat } = require("../utils/dateFormat");
 
 const TextSchema = new Schema(
   {
     createdAt: {
       type: Date,
       default: Date.now,
-      get: (timestamp) => dateFormat(timestamp)
+      get: (timestamp) => dateFormat(timestamp),
     },
     type: {
       type: String,
@@ -32,6 +32,7 @@ const TemplateSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (timestamp) => dateFormat(timestamp),
     },
     title: {
       type: String,

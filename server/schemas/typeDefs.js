@@ -17,7 +17,6 @@ const typeDefs = gql`
 
   type Template {
     _id: ID
-    collectionId: ID
     createdAt: String
     title: String
     texts: [Text]
@@ -57,9 +56,9 @@ const typeDefs = gql`
     editTemplate(_id: ID!, title: String!): Template
     deleteTemplate(_id: ID!): Template
 
-    addText(templateId: ID!, type: String!, string: String!): Template
-    editText(_id: ID!, type: String!, string: String!): Template
-    deleteText(_id: ID!, type: String!, string: String!): Template
+    addText(templateId: ID!, type: String!, text: String!): Template
+    editText(_id: ID!, type: String!, text: String!): Template
+    deleteText(_id: ID!, type: String!, text: String!): Template
   }
 `;
 

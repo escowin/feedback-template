@@ -10,13 +10,20 @@ const resolvers = {
       }
       const user = await User.findOne({ _id: context.user._id })
         .select("-__v -password")
-        .populate([{ path: "collections" }]);
+        .populate([
+          {
+            path: "collections",
+            populate: { path: "templates" },
+          },
+        ]);
       return user;
     },
     users: async () => User.find().select("-__v -password"),
     user: async (parent, { username }) =>
-      User.findOne({ username }).select("-__v -password"),
-    collections: async () => Collection.find(),
+      User.findOne({ username })
+        .select("-__v -password")
+        .populate("collections"),
+    collections: async () => Collection.find().populate("templates"),
     templates: async () => Template.find(),
   },
   Mutation: {
@@ -52,6 +59,7 @@ const resolvers = {
         username: context.user.username,
       });
 
+      // Links the template with a specified user
       await User.findByIdAndUpdate(
         { _id: context.user._id },
         { $push: { collections: collection._id } },
@@ -93,59 +101,64 @@ const resolvers = {
     },
 
     // Template
-    addTemplate: async (parent, args, context) => {
+    addTemplate: async (parent, { collectionId, ...data }, context) => {
       if (!context.user) {
         throw new AuthenticationError("login required");
       }
 
-      const collection = await Template.create({
-        ...args,
-        username: context.user.username,
-      });
+      const template = await Template.create({ ...data });
 
-      return collection;
+      // Links the template with a specified collection
+      await Collection.findByIdAndUpdate(
+        { _id: collectionId },
+        { $push: { templates: template._id } },
+        { new: true }
+      );
+
+      return template;
     },
     editTemplate: async (parent, { _id, ...updatedFields }, context) => {
       if (!context.user) {
         throw new AuthenticationError("login required");
       }
 
-      const collection = await Template.findByIdAndUpdate(
+      const template = await Template.findByIdAndUpdate(
         _id,
         { $set: updatedFields },
         { new: true }
       );
 
-      if (!collection) {
-        throw new Error("collection not found");
+      if (!template) {
+        throw new Error("template not found");
       }
 
-      return collection;
+      return template;
     },
     deleteTemplate: async (parent, { _id }, context) => {
       if (!context.user) {
         throw new AuthenticationError("login required");
       }
 
-      const collection = await Template.findByIdAndDelete(_id);
+      const template = await Template.findByIdAndDelete(_id);
 
       await Collection.findByIdAndUpdate(
         { _id: context.user._id },
         { $pull: { templates: template._id } },
         { new: true }
       );
-      return collection;
+      return template;
     },
 
     // Strings
-    addText: async (parent, { templateId, string, type }, context) => {
+    addText: async (parent, { templateId, text, type }, context) => {
       if (!context.user) {
         throw new AuthenticationError("login required");
       }
 
+      // Text is populated into specified template's `texts` array field
       const update = await Template.findOneAndUpdate(
         { _id: templateId },
-        { $push: { strings: { string, type } } },
+        { $push: { texts: { text, type } } },
         { new: true, runValidators: true }
       );
 
