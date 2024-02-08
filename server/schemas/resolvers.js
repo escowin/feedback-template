@@ -19,11 +19,11 @@ const resolvers = {
         .populate([
           {
             path: "logbook",
-            populate: { path: "grades", options: { sort: { assignment: 1 } } },
+            populate: { path: "grades" },
           },
         ]);
 
-      // Manually sort grades within logbook after population
+      // Manually sort grades within logbook after population since options.sort does not work with sub documents
       user.logbook.forEach((logbook) => {
         logbook.grades.sort((a, b) => a.assignment.localeCompare(b.assignment));
       });
@@ -38,11 +38,7 @@ const resolvers = {
         .populate("grades"),
     collections: async () => Collection.find().populate("templates"),
     templates: async () => Template.find(),
-    logbooks: async () =>
-      Logbook.find().populate({
-        path: "grades",
-        options: { sort: { assignment: 1 } },
-      }),
+    logbooks: async () => Logbook.find().populate("grades"),
   },
   Mutation: {
     // User
