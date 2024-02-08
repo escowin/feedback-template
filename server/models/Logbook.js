@@ -41,7 +41,7 @@ const LogbookSchema = new Schema(
       get: (timestamp) => dateFormat(timestamp),
     },
     date: {
-      type: Date,
+      type: String,
       required: true,
       trim: true,
     },

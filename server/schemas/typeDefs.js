@@ -6,6 +6,7 @@ const typeDefs = gql`
     username: String
     password: String
     collections: [Collection]
+    logbook: [Logbook]
   }
 
   type Collection {
@@ -29,6 +30,21 @@ const typeDefs = gql`
     text: String
   }
 
+  type Logbook {
+    _id: ID
+    createdAt: String
+    date: String
+    grades: [Grade]
+  }
+
+  type Grade {
+    _id: ID
+    createdAt: String
+    assignment: String
+    grade: Int
+    url: String
+  }
+
   type Auth {
     token: ID!
     user: User
@@ -42,6 +58,8 @@ const typeDefs = gql`
     collections: [Collection]
     template(_id: ID!): Template
     templates: [Template]
+    logbook(_id: ID!): Logbook
+    logbooks: [Logbook]
   }
 
   type Mutation {
@@ -59,6 +77,14 @@ const typeDefs = gql`
     addText(templateId: ID!, type: String!, text: String!): Template
     editText(_id: ID!, templateId: ID!, type: String, text: String): Template
     deleteText(_id: ID!, templateId: ID!): Template
+
+    addLogbook(date: String!): Logbook
+    editLogbook(_id: ID!, date: String!): Logbook
+    deleteLogbook(_id: ID!): Logbook
+
+    addGrade(logbookId: ID!, assignment: String!, grade: Int!, url: String!): Grade
+    editGrade(_id: ID!, logbookId: ID!, assignment: String, grade: Int, url: String): Grade
+    deleteGrade(_id: ID!, logbookId: ID!): Grade
   }
 `;
 
