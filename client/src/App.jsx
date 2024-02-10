@@ -2,7 +2,6 @@
 // Create Apllo client for API endpoint connection
 // Define main App with Routing
 // import { useState } from "react";
-
 import { ApolloProvider, ApolloClient, createHttpLink } from "@apollo/client";
 import { InMemoryCache } from "@apollo/client/cache";
 import { setContext } from "@apollo/client/link/context";
@@ -32,12 +31,13 @@ const client = new ApolloClient({
 
 
 function App() {
+  // const [navBar, setNavBar] = useState("")
 
   return (
     <ApolloProvider client={client}>
       <Router>
         <div className="App">
-          <Header />
+          <Header/>
           <main>
             <Routes>
               <Route path={"/"} element={<Home/>}/>

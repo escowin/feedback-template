@@ -16,7 +16,7 @@ function Header() {
   const links = ["login"];
   return (
     <header>
-      <h1>header component</h1>
+      <h1>Feedback Templateur</h1>
       <nav>
         <ul>
           {links.map((link, i) => (

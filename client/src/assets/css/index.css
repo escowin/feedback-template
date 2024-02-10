@@ -22,3 +22,52 @@
   gap: 1rem;
   height: 100vh;
 }
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* homepage */
+main {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  padding: 1rem;
+
+  & h2 {
+    grid-column: 1 / -1;
+  }
+
+  & section {
+    display: inherit;
+    grid-template-columns: inherit;
+    gap: inherit;
+    padding: inherit;
+  }
+}
+
+/* lists */
+#text-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  & li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .5rem 1rem;
+
+    & h3 {
+      order: 1;
+    }
+
+    & .copy-btn {
+      order: 2;
+    }
+
+    & p {
+      order: 3;
+    }
+  }
+}
